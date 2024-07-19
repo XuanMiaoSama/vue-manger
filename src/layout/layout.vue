@@ -9,7 +9,6 @@ const router = useRouter();
 <template>
 	<div class="layout">
 		<div class="top">
-
 		</div>
 		<div class="section">
 			<div class="aside">
@@ -50,8 +49,6 @@ const router = useRouter();
 			border: 1px solid #ccc;
 			height: 300px;
 		}
-
-
 	}
 }
 </style>
