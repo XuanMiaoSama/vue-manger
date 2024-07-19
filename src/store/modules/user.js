@@ -2,19 +2,17 @@ import { loginApi } from "../../api";
 import router from "../../router";
 
 const state = {
-  user: {}
+  userInfo: {}
 };
 
-const getters = {};
-
 const mutations = {
-  set_user: (state, payload) => {
-    state.user = payload;
+  SET_USER: (state, payload) => {
+    state.userInfo = payload;
   }
 };
 
 const actions = {
-  login_ac: (context, payload) => {
+  LOGIN_AC: (context, payload) => {
     return loginApi(payload).then(res => {
       // console.log(res.data.data);
       if (res.data.meta.status === 200) {
@@ -24,19 +22,26 @@ const actions = {
           duration: 3000,
           type: "success",
           onClose: () => {
-            context.commit("set_user", res.data.data);
-            router.push("/");
+            context.commit("SET_USER", res.data.data);
+            const path = location.search.slice(6) || "/";
+            router.push(path);
           }
         });
       }
     });
+  },
+  LOGOUT_AC: context => {
+    context.commit("SET_USER", {});
+    const timer = setTimeout(() => {
+      router.push("/login");
+      clearTimeout(timer);
+    }, 1500);
   }
 };
 
 export default {
   namespaced: true,
   state,
-  getters,
   mutations,
   actions
 };

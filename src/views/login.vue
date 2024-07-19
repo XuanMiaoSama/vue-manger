@@ -20,7 +20,7 @@ const submitForm = () => {
 	loginFormRef.value.validate(valid => {
 		// console.log(valid, "valid")
 		if (valid) {
-			store.dispatch('user/login_ac', loginForm.value)
+			store.dispatch('user/LOGIN_AC', loginForm.value)
 		} else {
 			ElMessage({
 				message: '账户密码格式不正确',

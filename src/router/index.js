@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
+import store from "../store";
 import Layout from "../layout/layout.vue";
 import UserList from "../views/users/userList.vue";
 import RightList from "../views/rights/rightList.vue";
@@ -10,6 +11,7 @@ export const asyncRoutes = [
     path: "/",
     component: Layout,
     redirect: "/userList",
+    icon: "UserFilled",
     meta: {
       title: "用户管理"
     },
@@ -18,6 +20,7 @@ export const asyncRoutes = [
         path: "/userList",
         name: "userList",
         component: UserList,
+        icon: "Menu",
         meta: {
           title: "用户列表"
         }
@@ -28,6 +31,7 @@ export const asyncRoutes = [
     path: "/rights",
     component: Layout,
     redirect: "/rights/rightList",
+    icon: "Stamp",
     meta: {
       title: "权限管理"
     },
@@ -36,6 +40,7 @@ export const asyncRoutes = [
         path: "/rights/rightList",
         name: "rightList",
         component: RightList,
+        icon: "Menu",
         meta: {
           title: "权限列表"
         }
@@ -44,6 +49,7 @@ export const asyncRoutes = [
         path: "/rights/roleList",
         name: "roleList",
         component: () => import("../views/rights/roleList.vue"),
+        icon: "Menu",
         meta: {
           title: "角色列表"
         }
@@ -54,6 +60,7 @@ export const asyncRoutes = [
     path: "/goods",
     component: Layout,
     redirect: "/goods/goodsList",
+    icon: "GoodsFilled",
     meta: {
       title: "商品管理"
     },
@@ -62,6 +69,7 @@ export const asyncRoutes = [
         path: "/goods/goodsList",
         name: "goodsList",
         component: () => import("../views/goods/goodsList.vue"),
+        icon: "Menu",
         meta: {
           title: "商品列表"
         }
@@ -70,6 +78,7 @@ export const asyncRoutes = [
         path: "/goods/tapVar",
         name: "tapVar",
         component: () => import("../views/goods/tapVar.vue"),
+        icon: "Menu",
         meta: {
           title: "分类参数"
         }
@@ -78,6 +87,7 @@ export const asyncRoutes = [
         path: "/goods/goodsTap",
         name: "goodsTap",
         component: () => import("../views/goods/goodsTap.vue"),
+        icon: "Menu",
         meta: {
           title: "商品分类"
         }
@@ -88,6 +98,7 @@ export const asyncRoutes = [
     path: "/orders",
     component: Layout,
     redirect: "/orders/orderList",
+    icon: "List",
     meta: {
       title: "订单管理"
     },
@@ -96,6 +107,7 @@ export const asyncRoutes = [
         path: "/orders/orderList",
         name: "orderList",
         component: () => import("../views/orders/orderList.vue"),
+        icon: "Menu",
         meta: {
           title: "订单列表"
         }
@@ -106,6 +118,7 @@ export const asyncRoutes = [
     path: "/datas",
     component: Layout,
     redirect: "/datas/data",
+    icon: "TrendCharts",
     meta: {
       title: "数据管理"
     },
@@ -114,6 +127,7 @@ export const asyncRoutes = [
         path: "/datas/data",
         name: "data",
         component: () => import("../views/datas/data.vue"),
+        icon: "Menu",
         meta: {
           title: "数据列表"
         }
@@ -127,7 +141,8 @@ export const staticRoutes = [
     path: "/login",
     component: Login,
     meta: {
-      title: "请登录"
+      title: "请登录",
+      isNoLogin: true
     }
   },
   {
@@ -142,6 +157,16 @@ export const staticRoutes = [
 const router = createRouter({
   history: createWebHistory(),
   routes: [...asyncRoutes, ...staticRoutes]
+});
+
+router.beforeEach((to, from, next) => {
+  const token = store.getters.token;
+  if (token || to.meta.isNoLogin) {
+    document.title = to.meta.title;
+    next();
+  } else {
+    next({ path: "/login", query: { path: to.path } });
+  }
 });
 
 // app.use(router);
