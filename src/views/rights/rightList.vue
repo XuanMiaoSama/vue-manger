@@ -4,6 +4,20 @@ import rightApi from "../../api/right";
 
 const rightList = ref([]);
 const type = ref("list");
+const tags = [
+  {
+    title: "一级",
+    type: "primary"
+  },
+  {
+    title: "二级",
+    type: "success"
+  },
+  {
+    title: "三级",
+    type: "danger"
+  }
+];
 
 const getRightList = () => {
   rightApi.rightList(type.value).then((res) => {
@@ -18,7 +32,14 @@ onMounted(() => {
 </script>
 <template>
   <div class="rightList">
-    <el-table :data="rightList" border style="width: 100%" class="table" stripe>
+    <el-table
+      :data="rightList"
+      border
+      style="width: 100%"
+      class="table"
+      stripe
+      highlight-current-row="true"
+      header-row-style="background:#fafafa">
       <el-table-column label="#" width="50">
         <template #default="{ $index }">
           {{ $index + 1 }}
@@ -28,12 +49,9 @@ onMounted(() => {
       <el-table-column prop="path" label="路径" />
       <el-table-column prop="level" label="权限等级">
         <template #default="{ row }">
-          <el-button
-            :type="row.level == 0 ? 'primary' : row.level == 1 ? 'success' : 'danger'"
-            plain
-            size="small">
-            {{ row.level == 0 ? "一级" : row.level == 1 ? "二级" : "三级" }}
-          </el-button>
+          <el-tag :type="tags[row.level].type" plain size="small">
+            {{ tags[row.level].title }}
+          </el-tag>
         </template>
       </el-table-column>
     </el-table>

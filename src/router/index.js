@@ -5,19 +5,20 @@ import UserList from "../views/users/userList.vue";
 import RightList from "../views/rights/rightList.vue";
 import Login from "../views/login.vue";
 import NoFound from "../views/404.vue";
+import Index from "../views/index.vue";
 
 export const asyncRoutes = [
   {
-    path: "/",
+    path: "/user",
     component: Layout,
-    redirect: "/userList",
+    redirect: "/user/userList",
     icon: "UserFilled",
     meta: {
       title: "用户管理"
     },
     children: [
       {
-        path: "/userList",
+        path: "/user/userList",
         name: "userList",
         component: UserList,
         icon: "Menu",
@@ -137,6 +138,23 @@ export const asyncRoutes = [
 ];
 
 export const staticRoutes = [
+  {
+    path: "/",
+    component: Layout,
+    redirect: "/home",
+    meta: {
+      title: "首页"
+    },
+    children: [
+      {
+        path: "/home",
+        component: Index,
+        meta: {
+          title: "首页"
+        }
+      }
+    ]
+  },
   {
     path: "/login",
     component: Login,

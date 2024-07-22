@@ -32,6 +32,13 @@ const rules = ref({
   mobile: [{ validator: validateTel, trigger: "blur" }]
 });
 
+const init = () => {
+  userForm.value.username = "";
+  userForm.value.password = "";
+  userForm.value.email = "";
+  userForm.value.mobile = "";
+};
+
 const search = () => {
   page.query = inputValue.value;
 };
@@ -66,8 +73,8 @@ onMounted(() => {
 });
 
 // # 修改用户状态
-const changeState = (row) => {
-  userApi.changeState(row);
+const updateState = (row) => {
+  userApi.updateState(row);
 };
 
 // # 添加用户
@@ -102,9 +109,9 @@ const showUser = (row) => {
 };
 
 // # 编辑用户
-const editUser = () => {
+const updateUser = () => {
   // console.log(editUserFlag.value, "edit");
-  userApi.editUser(userForm.value, userId.value).then(() => {
+  userApi.updateUser(userForm.value, userId.value).then(() => {
     getUserList();
     dialogFormVisible.value = false;
   });
@@ -135,7 +142,14 @@ const delUser = (row) => {
           <el-button icon="Search" @click="search()" />
         </template>
       </el-input>
-      <el-button type="primary" @click="dialogFormVisible = true">添加用户</el-button>
+      <el-button
+        type="primary"
+        @click="
+          dialogFormVisible = true;
+          init();
+        "
+        >添加用户</el-button
+      >
     </div>
 
     <el-table :data="userList" border style="width: 100%" class="table" stripe>
@@ -150,7 +164,7 @@ const delUser = (row) => {
       <el-table-column prop="role_name" label="角色" width="150" />
       <el-table-column label="状态" width="130">
         <template #default="{ row }">
-          <el-switch v-model="row.mg_state" size="small" @change="changeState(row)" />
+          <el-switch v-model="row.mg_state" size="small" @change="updateState(row)" />
         </template>
       </el-table-column>
       <el-table-column label="操作" width="150">
@@ -208,7 +222,7 @@ const delUser = (row) => {
       <template #footer>
         <div class="dialog-footer">
           <el-button @click="dialogFormVisible = false">取消</el-button>
-          <el-button type="primary" @click="editUserFlag ? editUser() : addUser()">
+          <el-button type="primary" @click="editUserFlag ? updateUser() : addUser()">
             提交
           </el-button>
         </div>

@@ -13,7 +13,7 @@ const mutations = {
 
 const actions = {
   LOGIN_AC: (context, payload) => {
-    return loginApi(payload).then(res => {
+    return loginApi(payload).then((res) => {
       // console.log(res.data.data);
       if (res.data.meta.status === 200) {
         ElMessage({
@@ -30,7 +30,7 @@ const actions = {
       }
     });
   },
-  LOGOUT_AC: context => {
+  LOGOUT_AC: (context) => {
     context.commit("SET_USER", {});
     const timer = setTimeout(() => {
       router.push("/login");

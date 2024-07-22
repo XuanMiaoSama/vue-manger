@@ -1,18 +1,24 @@
 import request from "../utils/request";
 
-const userList = params => {
+/**
+ * @description  : 获取用户数据列表
+ * @param         {{pagenum:number,pagesize:number,query:string}} params
+ * @return        {*}
+ */
+const userList = (params) => {
   return request({
     url: "users",
     method: "get",
-    params: params || {
-      pagenum: 1,
-      pagesize: "5",
-      query: ""
-    }
+    params
   });
 };
 
-const addUser = data => {
+/**
+ * @description  : 添加用户
+ * @param         {{username:string,password:string,email:string,mobile:string}} data
+ * @return        {*}
+ */
+const addUser = (data) => {
   return request({
     url: "users",
     method: "post",
@@ -20,21 +26,36 @@ const addUser = data => {
   });
 };
 
-const changeState = data => {
+/**
+ * @description  : 更新用户状态
+ * @param         {{id:string|number,mg_state:string|boolean}} data
+ * @return        {*}
+ */
+const updateState = (data) => {
   return request({
     url: `users/${data.id}/state/${data.mg_state}`,
     method: "put"
   });
 };
 
-const delUser = id => {
+/**
+ * @description  : 查询用户信息
+ * @param         {string|number} id
+ * @return        {*}
+ */
+const selectUser = (id) => {
   return request({
-    url: `users/${id}`,
-    method: "delete"
+    url: `users/${id}`
   });
 };
 
-const editUser = (data, id) => {
+/**
+ * @description  : 更新用户信息
+ * @param         {{email:string,mobile:string}} data
+ * @param         {string|number} id
+ * @return        {*}
+ */
+const updateUser = (data, id) => {
   return request({
     url: `users/${id}`,
     method: "put",
@@ -42,10 +63,37 @@ const editUser = (data, id) => {
   });
 };
 
+/**
+ * @description  : 删除用户
+ * @param         {string|number} id
+ * @return        {*}
+ */
+const delUser = (id) => {
+  return request({
+    url: `users/${id}`,
+    method: "delete"
+  });
+};
+
+/**
+ * @description  : 分配用户角色
+ * @param         {string|number} id
+ * @param         {string|number} rid
+ * @return        {*}
+ */
+//! 未完成
+const addUserRole = (id, rid) => {
+  return request({
+    url: `users/${id}/role`,
+    method: "put"
+  });
+};
+
 export default {
   userList,
   addUser,
-  changeState,
-  delUser,
-  editUser
+  updateState,
+  selectUser,
+  updateUser,
+  delUser
 };
