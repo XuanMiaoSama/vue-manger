@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from "vue";
-import { asyncRoutes } from "../router/index.js";
+// import { asyncRoutes } from "../router/index.js";
 import { useRoute } from "vue-router";
 import { useStore } from "vuex";
 const store = useStore();
@@ -37,7 +37,7 @@ const logout = () => {
           </el-menu-item>
           <el-sub-menu
             :index="router.path"
-            v-for="router in asyncRoutes"
+            v-for="router in store.state.router.asyncRoutes"
             :key="router.path">
             <template #title>
               <el-icon>

@@ -63,7 +63,7 @@ const delRole = (id) => {
 /**
  * @description  : 添加角色授权
  * @param         {string|number} id
- * @param         {number[]|string[]} rids
+ * @param         {string} rids
  * @return        {*}
  */
 const addRoleRight = (id, rids) => {

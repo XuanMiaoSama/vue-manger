@@ -1,14 +1,22 @@
+/*
+ * @Author       : kaioufoxms@foxmail.com
+ * @Date         : 2024-07-19
+ * @LastEditors  : kaioufoxms@foxmail.com
+ * @LastEditTime : 2024-07-24
+ * @FilePath     : \vue-manger\src\store\modules\user.js
+ * @Description  :
+ */
 import { loginApi } from "../../api";
 import router from "../../router";
 
 const state = {
-  userInfo: {}
+  userInfo: {},
 };
 
 const mutations = {
   SET_USER: (state, payload) => {
     state.userInfo = payload;
-  }
+  },
 };
 
 const actions = {
@@ -25,23 +33,24 @@ const actions = {
             context.commit("SET_USER", res.data.data);
             const path = location.search.slice(6) || "/";
             router.push(path);
-          }
+          },
         });
       }
     });
   },
   LOGOUT_AC: (context) => {
     context.commit("SET_USER", {});
+    // context.commit("router/SET_ROUTER", [], { root: true });
     const timer = setTimeout(() => {
       router.push("/login");
       clearTimeout(timer);
     }, 1500);
-  }
+  },
 };
 
 export default {
   namespaced: true,
   state,
   mutations,
-  actions
+  actions,
 };

@@ -8,6 +8,7 @@
  */
 import { createStore } from "vuex";
 import user from "./modules/user";
+import router from "./modules/router";
 import createPersistedState from "vuex-persistedstate";
 
 const getters = {
@@ -24,13 +25,15 @@ const store = createStore({
       key: "vue-manger",
       reducer: state => {
         return {
-          user: state.user
+          user: state.user,
+          router:state.router
         };
       }
     })
   ],
   modules: {
-    user
+    user,
+    router
   }
 });
 

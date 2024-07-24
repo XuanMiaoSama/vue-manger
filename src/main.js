@@ -2,8 +2,8 @@
  * @Author       : kaioufoxms@foxmail.com
  * @Date         : 2024-07-18 13:31
  * @LastEditors  : kaioufoxms@foxmail.com
- * @LastEditTime : 2024-07-19 08:34
- * @FilePath     : \vue3_studye:\QD2401\04\vue-manger\src\main.js
+ * @LastEditTime : 2024-07-24
+ * @FilePath     : \vue-manger\src\main.js
  * @Description  :
  */
 import { createApp } from "vue";
@@ -12,6 +12,7 @@ import App from "./App.vue";
 import * as ElementPlusIconsVue from "@element-plus/icons-vue";
 import router from "./router";
 import store from "./store";
+import component from "./components";
 
 const app = createApp(App);
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
@@ -19,4 +20,5 @@ for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
 }
 app.use(router);
 app.use(store);
+app.use(component);
 app.mount("#app");

@@ -2,7 +2,7 @@
  * @Author       : kaioufoxms@foxmail.com
  * @Date         : 2024-07-19 20:39
  * @LastEditors  : kaioufoxms@foxmail.com
- * @LastEditTime : 2024-07-22 14:45
+ * @LastEditTime : 2024-07-24
  * @FilePath     : \vue-manger\src\api\right.js
  * @Description  :
  */
@@ -15,10 +15,13 @@ import request from "../utils/request";
  */
 const rightList = (type) => {
   return request({
-    url: `rights/${type}`
+    url: `rights/${type}`,
   });
 };
 
+const menuRight = () => request.get("menus");
+
 export default {
-  rightList
+  rightList,
+  menuRight,
 };

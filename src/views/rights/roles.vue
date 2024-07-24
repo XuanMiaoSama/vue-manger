@@ -16,6 +16,7 @@ const rightList = ref([]);
 const tree = ref();
 const roleId = ref(0);
 const editFlag = ref(false);
+const keys = ref([]);
 
 const init = () => {
   roleInfo.value.roleName = "";
@@ -88,8 +89,8 @@ const addRoleRight = () => {
   ].toString();
   // console.log(rids, "权限");
   roleApi.addRoleRight(roleId.value, rids).then((res) => {
-    // console.log(res, "结果");
     getRoleList();
+    drawer.value = false;
   });
 };
 
@@ -116,6 +117,31 @@ const updateRole = () => {
     getRoleList();
     dialogFormVisible.value = false;
   });
+};
+
+//# 设置角色权限
+const setRole = (row) => {
+  drawer.value = true;
+  roleId.value = row.id;
+  let arr = childrenDeep(row.children);
+  keys.value = arr;
+  // console.log(keys.value, "选中权限数组");
+};
+
+//# 递归获取权限id
+const childrenDeep = (children) => {
+  if (!children) {
+    return [];
+  }
+  let arr = [];
+  children.forEach((item) => {
+    if (!item.children) {
+      arr.push(item.id);
+    } else {
+      arr = [...arr, ...childrenDeep(item.children)];
+    }
+  });
+  return arr;
 };
 </script>
 <template>
@@ -191,14 +217,7 @@ const updateRole = () => {
           <el-button type="danger" icon="Delete" size="small" @click="delRole(row)">
             删除
           </el-button>
-          <el-button
-            type="warning"
-            icon="Setting"
-            size="small"
-            @click="
-              drawer = true;
-              roleId = row.id;
-            ">
+          <el-button type="warning" icon="Setting" size="small" @click="setRole(row)">
             分配权限
           </el-button>
         </template>
@@ -209,6 +228,9 @@ const updateRole = () => {
   <el-drawer v-model="drawer" title="分配权限">
     <el-tree
       ref="tree"
+      :key="roleId"
+      :default-checked-keys="keys"
+      :default-expanded-keys="keys"
       :props="{ label: 'authName' }"
       :data="rightList"
       show-checkbox

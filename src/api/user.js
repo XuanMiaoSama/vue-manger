@@ -85,7 +85,10 @@ const delUser = (id) => {
 const addUserRole = (id, rid) => {
   return request({
     url: `users/${id}/role`,
-    method: "put"
+    method: "put",
+    data: {
+      rid
+    }
   });
 };
 
@@ -95,5 +98,6 @@ export default {
   updateState,
   selectUser,
   updateUser,
-  delUser
+  delUser,
+  addUserRole
 };

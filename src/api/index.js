@@ -10,10 +10,10 @@ import request from "../utils/request";
 
 /**
  * @description  : 登录接口
- * @param         {username, password} data
+ * @param         {username:string, password:string} data
  * @return        {*}
  */
-export const loginApi = data => {
+export const loginApi = (data) => {
   return request({
     url: "login",
     method: "post",

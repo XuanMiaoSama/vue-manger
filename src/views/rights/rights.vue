@@ -37,9 +37,7 @@ onMounted(() => {
       border
       style="width: 100%"
       class="table"
-      stripe
-      highlight-current-row="true"
-      header-row-style="background:#fafafa">
+      stripe>
       <el-table-column label="#" width="50">
         <template #default="{ $index }">
           {{ $index + 1 }}

@@ -1,13 +1,15 @@
 <script setup>
 import { onMounted, reactive, ref, watch } from "vue";
-import userApi from "../../api/user";
+import userApi from "../../api/user.js";
 import { useStore } from "vuex";
 import {
   validateUser,
   validatePass,
   validateEmail,
-  validateTel
-} from "../../utils/validator";
+  validateTel,
+} from "../../utils/validator.js";
+import JsonToExcel from "../../utils/saveExcel.js";
+import roleApi from "../../api/role.js";
 
 const inputValue = ref("");
 const userFormRef = ref(null);
@@ -19,17 +21,24 @@ const userForm = ref({
   username: "",
   password: "",
   email: "",
-  mobile: ""
+  mobile: "",
 });
 const editUserFlag = ref(false);
 const userId = ref(0);
+const userRoleDialog = ref(false);
+const roleList = ref([]);
+const userInfo = ref({
+  userName: "",
+  roleName: "",
+  roleId: "",
+});
 
 // # 验证表单
 const rules = ref({
   username: [{ validator: validateUser, trigger: "blur" }],
   password: [{ validator: validatePass, trigger: "blur" }],
   email: [{ validator: validateEmail, trigger: "blur" }],
-  mobile: [{ validator: validateTel, trigger: "blur" }]
+  mobile: [{ validator: validateTel, trigger: "blur" }],
 });
 
 const init = () => {
@@ -46,7 +55,7 @@ const search = () => {
 const page = reactive({
   pagenum: 1,
   pagesize: 5,
-  query: ""
+  query: "",
 });
 
 // # 监听page的变化
@@ -56,7 +65,7 @@ watch(
     getUserList();
   },
   {
-    deep: true
+    deep: true,
   }
 );
 
@@ -91,7 +100,7 @@ const addUser = () => {
       ElMessage({
         message: "用户信息格式不正确",
         type: "error",
-        duration: 1000
+        duration: 1000,
       });
     }
   });
@@ -122,12 +131,49 @@ const delUser = (row) => {
   ElMessageBox.confirm("你确定要删除当前用户吗", "警告", {
     confirmButtonText: "确定",
     cancelButtonText: "取消",
-    type: "warning"
+    type: "warning",
   }).then(() => {
     userApi.delUser(row.id).then(() => {
       getUserList();
     });
   });
+};
+
+//# 导出表格
+const SaveExcel = () => {
+  let data = [
+    {
+      sheetData: userList.value.map((item) => {
+        item.state = item.mg_state ? "启用" : "禁用";
+        return item;
+      }), //JSON数据
+      sheetName: "个人信息表", //excle表默认标签
+      sheetFilter: ["id", "username", "email", "mobile", "role_name", "state"], //过滤字段
+      sheetHeader: ["ID", "用户名", "邮箱", "手机", "角色", "状态"], //标题头
+    },
+  ];
+  JsonToExcel("用户信息表", data);
+};
+
+//# 获取角色列表
+const getRoleList = (row) => {
+  userId.value = row.id;
+  userInfo.value.userName = row.username;
+  userInfo.value.roleName = row.role_name;
+  userInfo.value.roleId = "";
+  roleApi.roleList().then((res) => {
+    roleList.value = res.data.data;
+  });
+  userRoleDialog.value = true;
+};
+
+//# 添加角色
+const addUserRole = () => {
+  userApi.addUserRole(userId.value, userInfo.value.roleId).then((res) => {
+    console.log(res);
+    getUserList();
+  });
+  userRoleDialog.value = false;
 };
 </script>
 <template>
@@ -150,6 +196,7 @@ const delUser = (row) => {
         "
         >添加用户</el-button
       >
+      <el-button type="success" @click="SaveExcel()">导出表格</el-button>
     </div>
 
     <el-table :data="userList" border style="width: 100%" class="table" stripe>
@@ -181,7 +228,12 @@ const delUser = (row) => {
             circle
             size="small"
             @click="delUser(row)" />
-          <el-button type="warning" icon="Setting" circle size="small" />
+          <el-button
+            type="warning"
+            icon="Setting"
+            circle
+            size="small"
+            @click="getRoleList(row)" />
         </template>
       </el-table-column>
     </el-table>
@@ -228,6 +280,32 @@ const delUser = (row) => {
         </div>
       </template>
     </el-dialog>
+
+    <el-dialog v-model="userRoleDialog" title="Tips" width="500" :key="userId">
+      <el-form :model="userInfo">
+        <el-form-item label="当前用户">
+          <el-input v-model="userInfo.userName" autocomplete="off" disabled />
+        </el-form-item>
+        <el-form-item label="当前角色">
+          <el-input v-model="userInfo.roleName" autocomplete="off" disabled />
+        </el-form-item>
+        <el-form-item label="分配角色">
+          <el-select v-model="userInfo.roleId" placeholder="Select" style="width: 240px">
+            <el-option
+              v-for="item in roleList"
+              :key="item.id"
+              :label="item.roleName"
+              :value="item.id" />
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <div class="dialog-footer">
+          <el-button @click="userRoleDialog = false">取消</el-button>
+          <el-button type="primary" @click="addUserRole()"> 确认 </el-button>
+        </div>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
@@ -245,7 +323,7 @@ const delUser = (row) => {
     margin-bottom: 10px;
   }
   .input {
-    width: 300px;
+    width: 500px;
     display: flex;
   }
 }
